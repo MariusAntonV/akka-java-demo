@@ -21,7 +21,7 @@ public class PrimeNumbersAdder
 
    Validator validator = new SumOfDigitsValidator( 2 );
 
-   ActivityPrinter activityPrinter = new SysoDotActivityPrinter( 1000 );
+   ActivityPrinter activityPrinter = new SysoDotActivityPrinter();
 
 
    public PrimeNumbersAdder( final int number )
