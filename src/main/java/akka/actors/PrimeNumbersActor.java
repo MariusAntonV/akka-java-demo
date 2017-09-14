@@ -19,6 +19,7 @@ public class PrimeNumbersActor extends UntypedActor
       {
          final int number = (( NumberMessage ) message).getNumber();
          final PrimeNumbersAdder adder = new PrimeNumbersAdder( number );
+
          final int result = adder.calculate();
 
          // Send a notification back to the sender

@@ -5,8 +5,6 @@ import org.apache.log4j.Logger;
 import demo.numbers.util.ActivityPrinter;
 import demo.numbers.util.PrimeNumberUtils;
 import demo.numbers.util.SysoDotActivityPrinter;
-import demo.numbers.validation.SumOfDigitsValidator;
-import demo.numbers.validation.Validator;
 
 /**
  * Calculate the sum of prime numbers lower then the given parameter.
@@ -17,16 +15,23 @@ public class PrimeNumbersAdder
 {
    final static Logger LOG = Logger.getLogger( PrimeNumbersAdder.class );
 
-   private final int number;
+   private int start;
 
-   Validator validator = new SumOfDigitsValidator( 2 );
+   private final int end;
 
    ActivityPrinter activityPrinter = new SysoDotActivityPrinter();
 
 
-   public PrimeNumbersAdder( final int number )
+   public PrimeNumbersAdder( final int end )
    {
-      this.number = number;
+      this.end = end;
+   }
+
+
+   public PrimeNumbersAdder( final int start, final int end )
+   {
+      this.start = start;
+      this.end = end;
    }
 
 
@@ -38,21 +43,14 @@ public class PrimeNumbersAdder
    {
       int primeNumbersSum = 0;
 
-      if ( this.validator.validate( this.number ) )
+      for ( int i = this.start; i <= this.end; i++ )
       {
-         for ( int i = 0; i <= this.number; i++ )
-         {
-            this.activityPrinter.printActivity( i );
+         this.activityPrinter.printActivity( i );
 
-            if ( PrimeNumberUtils.isPrime( i ) )
-            {
-               primeNumbersSum += i;
-            }
+         if ( PrimeNumberUtils.isPrime( i ) )
+         {
+            primeNumbersSum += i;
          }
-      }
-      else
-      {
-         PrimeNumbersAdder.LOG.error( "Number " + this.number + " did not pass validation !" );
       }
 
       return primeNumbersSum;
