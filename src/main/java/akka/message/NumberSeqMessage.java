@@ -1,4 +1,4 @@
-package akka.actors.seq.message;
+package akka.message;
 
 public class NumberSeqMessage
 {

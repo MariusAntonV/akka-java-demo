@@ -3,7 +3,7 @@ package akka.actors.seq;
 import org.apache.log4j.Logger;
 
 import akka.actor.UntypedActor;
-import akka.actors.seq.message.NumberSeqMessage;
+import akka.message.NumberSeqMessage;
 import akka.message.PartialResultMessage;
 import demo.numbers.PrimeNumbersAdder;
 
