@@ -31,12 +31,26 @@ public class PerformanceTest
 
    private Random rand;
 
+   private ActorSystem actorSystem;
+
+   private ActorRef printer;
+
 
    @Before
    public void setUp()
    {
 
       this.rand = new Random( 324 );
+
+      this.actorSystem = ActorSystem.create( "actorSystem" );
+
+      this.printer = this.actorSystem.actorOf( new Props( new UntypedActorFactory()
+      {
+         public UntypedActor create()
+         {
+            return new ResultPrinterActor( PerformanceTest.NO_OF_MESSAGES, PerformanceTest.this.actorSystem );
+         }
+      } ), "printer" );
    }
 
 
@@ -62,22 +76,12 @@ public class PerformanceTest
    @Test
    public void testWithActors()
    {
-      // Create our ActorSystem, which owns and configures the classes
-      final ActorSystem actorSystem = ActorSystem.create( "actorSystem" );
 
-      final ActorRef printer = actorSystem.actorOf( new Props( new UntypedActorFactory()
+      final ActorRef master = this.actorSystem.actorOf( new Props( new UntypedActorFactory()
       {
          public UntypedActor create()
          {
-            return new ResultPrinterActor( PerformanceTest.NO_OF_MESSAGES, actorSystem );
-         }
-      } ), "printer" );
-
-      final ActorRef master = actorSystem.actorOf( new Props( new UntypedActorFactory()
-      {
-         public UntypedActor create()
-         {
-            return new PrimeNumbersMaster( PerformanceTest.NO_OF_WORKERS, printer );
+            return new PrimeNumbersMaster( PerformanceTest.NO_OF_WORKERS, PerformanceTest.this.printer );
          }
       } ), "master" );
 
@@ -86,29 +90,20 @@ public class PerformanceTest
          master.tell( new NumberMessage( x ), null );
       } );
 
-      actorSystem.awaitTermination();
+      this.actorSystem.awaitTermination();
    }
 
 
    @Test
    public void testWithActorsOptimised()
    {
-      // Create our ActorSystem, which owns and configures the classes
-      final ActorSystem actorSystem = ActorSystem.create( "actorSystem" );
 
-      final ActorRef printer = actorSystem.actorOf( new Props( new UntypedActorFactory()
+      final ActorRef master = this.actorSystem.actorOf( new Props( new UntypedActorFactory()
       {
          public UntypedActor create()
          {
-            return new ResultPrinterActor( PerformanceTest.NO_OF_MESSAGES, actorSystem );
-         }
-      } ), "printer" );
-
-      final ActorRef master = actorSystem.actorOf( new Props( new UntypedActorFactory()
-      {
-         public UntypedActor create()
-         {
-            return new PrimeNumbersSeqMaster( PerformanceTest.NO_OF_WORKERS, PerformanceTest.NO_OF_MESSAGES, printer );
+            return new PrimeNumbersSeqMaster( PerformanceTest.NO_OF_WORKERS, PerformanceTest.NO_OF_MESSAGES,
+                  PerformanceTest.this.printer );
          }
       } ).withRouter( new RoundRobinRouter( PerformanceTest.NO_OF_MESSAGES ) ), "primeNumbersMaster" );
 
@@ -117,7 +112,7 @@ public class PerformanceTest
          master.tell( new NumberMessage( x ), null );
       } );
 
-      actorSystem.awaitTermination();
+      this.actorSystem.awaitTermination();
    }
 
 

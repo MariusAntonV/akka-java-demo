@@ -23,10 +23,10 @@ public class PrimeNumbersSeqMaster extends UntypedActor
    final static Logger LOG = Logger.getLogger( PrimeNumbersSeqMaster.class );
 
    /** Router used for calling workers */
-   private final ActorRef workersRouter;
+   private final ActorRef workers;
 
    /** Print result actor */
-   private final ActorRef printResult;
+   private final ActorRef printers;
 
    /** Reference for number of expected messages */
    private int expectedMessages = Integer.MAX_VALUE;
@@ -47,13 +47,12 @@ public class PrimeNumbersSeqMaster extends UntypedActor
    public PrimeNumbersSeqMaster( final int numberOfWorkers, final int noOfExpectedResults,
          final ActorRef printResultActor )
    {
-      // Create a new router to distribute messages out to PrimeNumbersActors
-      this.workersRouter =
+      this.workers =
             this.getContext().actorOf(
                   new Props( PrimeNumbersSeqWorker.class ).withRouter( new RoundRobinRouter( numberOfWorkers ) ),
                   "router" );
 
-      this.printResult = printResultActor;
+      this.printers = printResultActor;
    }
 
 
@@ -99,11 +98,11 @@ public class PrimeNumbersSeqMaster extends UntypedActor
 
          if ( end > number )
          {
-            this.workersRouter.tell( new NumberSeqMessage( start, number, number ), getSelf() );
+            this.workers.tell( new NumberSeqMessage( start, number, number ), getSelf() );
          }
          else
          {
-            this.workersRouter.tell( new NumberSeqMessage( start, end, number ), getSelf() );
+            this.workers.tell( new NumberSeqMessage( start, end, number ), getSelf() );
          }
          sent++;
 
@@ -122,7 +121,7 @@ public class PrimeNumbersSeqMaster extends UntypedActor
       if ( this.receivedResults >= this.expectedMessages )
       {
          //finish
-         this.printResult.tell( new ResultMessage( message.getNumber(), this.sum ), getSelf() );
+         this.printers.tell( new ResultMessage( message.getNumber(), this.sum ), getSelf() );
 
          getContext().stop( getSelf() );
       }

@@ -21,10 +21,10 @@ public class PrimeNumbersMaster extends UntypedActor
    final static Logger LOG = Logger.getLogger( PrimeNumbersMaster.class );
 
    /** Router for using PrimeNumbersWorkers */
-   private final ActorRef primeNumbersRouter;
+   private final ActorRef workers;
 
    /** Print result */
-   private final ActorRef resultPrinter;
+   private final ActorRef printer;
 
 
    /**
@@ -34,10 +34,10 @@ public class PrimeNumbersMaster extends UntypedActor
     */
    public PrimeNumbersMaster( final int numberOfWorkers, final ActorRef printer )
    {
-      this.resultPrinter = printer;
+      this.printer = printer;
 
       // Create a new router to distribute messages out to PrimeNumbersActors
-      this.primeNumbersRouter =
+      this.workers =
             this.getContext().actorOf(
                   new Props( PrimeNumbersWorker.class ).withRouter( new RoundRobinRouter( numberOfWorkers ) ),
                   "router" );
@@ -50,11 +50,11 @@ public class PrimeNumbersMaster extends UntypedActor
    {
       if ( message instanceof NumberMessage )
       {
-         this.primeNumbersRouter.tell( message, getSelf() );
+         this.workers.tell( message, getSelf() );
       }
       else if ( message instanceof ResultMessage )
       {
-         this.resultPrinter.tell( message, getSelf() );
+         this.printer.tell( message, getSelf() );
       }
       else
       {
