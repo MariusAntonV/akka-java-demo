@@ -2,6 +2,12 @@ package akka.messages;
 
 import java.io.Serializable;
 
+/**
+ * Holds an initial number and the sum of prime numbers lower then that number.
+ * 
+ * @author manton
+ *
+ */
 public class PartialResultMessage implements Serializable
 {
    private final int number;

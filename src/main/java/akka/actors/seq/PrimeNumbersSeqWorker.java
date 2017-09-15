@@ -7,9 +7,15 @@ import akka.messages.NumberSeqMessage;
 import akka.messages.PartialResultMessage;
 import demo.numbers.PrimeNumbersAdder;
 
-public class PrimeNumbersSeqActor extends UntypedActor
+/**
+ * Actor used to calculate sum of prime numbers between a sequence of numbers.
+ * 
+ * @author manton
+ */
+public class PrimeNumbersSeqWorker extends UntypedActor
 {
-   final static Logger LOG = Logger.getLogger( PrimeNumbersSeqActor.class );
+   /** The logger */
+   final static Logger LOG = Logger.getLogger( PrimeNumbersSeqWorker.class );
 
 
    @Override

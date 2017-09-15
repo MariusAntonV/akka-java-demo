@@ -11,28 +11,46 @@ import akka.messages.PartialResultMessage;
 import akka.messages.ResultMessage;
 import akka.routing.RoundRobinRouter;
 
+/**
+ * Master actor used to calculate sum of prime numbers lower then a limit, using smaller intervals.
+ * 
+ * @author manton
+ *
+ */
 public class PrimeNumbersSeqMaster extends UntypedActor
 {
+   /** The logger */
    final static Logger LOG = Logger.getLogger( PrimeNumbersSeqMaster.class );
 
-   private final ActorRef primeNumbersRouter;
+   /** Router used for calling workers */
+   private final ActorRef workersRouter;
 
+   /** Print result actor */
    private final ActorRef printResult;
 
+   /** Reference for number of expected messages */
    private int expectedMessages = Integer.MAX_VALUE;
 
+   /** Actual number of received results */
    private int receivedResults = 0;
 
+   /** Sum of prime numbers calculated so far */
    private int sum = 0;
 
 
+   /**
+    * 
+    * @param numberOfWorkers
+    * @param noOfExpectedResults
+    * @param printResultActor
+    */
    public PrimeNumbersSeqMaster( final int numberOfWorkers, final int noOfExpectedResults,
          final ActorRef printResultActor )
    {
       // Create a new router to distribute messages out to PrimeNumbersActors
-      this.primeNumbersRouter =
+      this.workersRouter =
             this.getContext().actorOf(
-                  new Props( PrimeNumbersSeqActor.class ).withRouter( new RoundRobinRouter( numberOfWorkers ) ),
+                  new Props( PrimeNumbersSeqWorker.class ).withRouter( new RoundRobinRouter( numberOfWorkers ) ),
                   "router" );
 
       this.printResult = printResultActor;
@@ -46,25 +64,7 @@ public class PrimeNumbersSeqMaster extends UntypedActor
       {
          final int number = (( NumberMessage ) message).getNumber();
 
-         int start = 0;
-         int sent = 0;
-         while ( start <= number )
-         {
-
-            final int end = start + 1000;
-
-            if ( end > number )
-            {
-               this.primeNumbersRouter.tell( new NumberSeqMessage( start, number, number ), getSelf() );
-            }
-            else
-            {
-               this.primeNumbersRouter.tell( new NumberSeqMessage( start, end, number ), getSelf() );
-            }
-            sent++;
-
-            start = end;
-         }
+         final int sent = sendSmallerIntervals( number );
 
          this.expectedMessages = sent;
 
@@ -74,20 +74,58 @@ public class PrimeNumbersSeqMaster extends UntypedActor
          this.receivedResults++;
          this.sum += (( PartialResultMessage ) message).getSumOfPrimeNumbers();
 
-         if ( this.receivedResults >= this.expectedMessages )
-         {
-            //finish
-            this.printResult.tell( new ResultMessage( (( PartialResultMessage ) message).getNumber(), this.sum ),
-                  getSelf() );
-
-            getContext().stop( getSelf() );
-         }
+         printResultsWhenFinished( ( PartialResultMessage ) message );
       }
       else
       {
          unhandled( message );
       }
 
+   }
+
+
+   /**
+    * Break entire sequence into smaller intervals and send them to be processed by the workers.
+    * @param number upper limit for calculating the sum
+    * @return number of sent messages to workers
+    */
+   private int sendSmallerIntervals( final int number )
+   {
+      int start = 0;
+      int sent = 0;
+      while ( start <= number )
+      {
+         final int end = start + 1000;
+
+         if ( end > number )
+         {
+            this.workersRouter.tell( new NumberSeqMessage( start, number, number ), getSelf() );
+         }
+         else
+         {
+            this.workersRouter.tell( new NumberSeqMessage( start, end, number ), getSelf() );
+         }
+         sent++;
+
+         start = end;
+      }
+      return sent;
+   }
+
+
+   /**
+    * Print final result when processing was finished.
+    * @param message
+    */
+   private void printResultsWhenFinished( final PartialResultMessage message )
+   {
+      if ( this.receivedResults >= this.expectedMessages )
+      {
+         //finish
+         this.printResult.tell( new ResultMessage( message.getNumber(), this.sum ), getSelf() );
+
+         getContext().stop( getSelf() );
+      }
    }
 
 }

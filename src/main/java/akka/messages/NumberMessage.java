@@ -2,6 +2,11 @@ package akka.messages;
 
 import java.io.Serializable;
 
+/**
+ * Holds a number.
+ * 
+ * @author manton
+ */
 public class NumberMessage implements Serializable
 {
    private final int number;

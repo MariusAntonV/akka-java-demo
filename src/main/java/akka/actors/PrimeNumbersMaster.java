@@ -9,20 +9,32 @@ import akka.messages.NumberMessage;
 import akka.messages.ResultMessage;
 import akka.routing.RoundRobinRouter;
 
+/**
+ * Master actor used to calculate sum of prime numbers.
+ * 
+ * @author manton
+ *
+ */
 public class PrimeNumbersMaster extends UntypedActor
 {
-
+   /** The logger */
    final static Logger LOG = Logger.getLogger( PrimeNumbersMaster.class );
 
+   /** Router for using PrimeNumbersWorkers */
    private final ActorRef primeNumbersRouter;
 
+   /** Print result */
    private final ActorRef resultPrinter;
 
 
-   public PrimeNumbersMaster( final int numberOfWorkers, final ActorRef listener )
+   /**
+    * 
+    * @param numberOfWorkers number of workers
+    * @param printer the printer actor
+    */
+   public PrimeNumbersMaster( final int numberOfWorkers, final ActorRef printer )
    {
-      // Save our parameters locally
-      this.resultPrinter = listener;
+      this.resultPrinter = printer;
 
       // Create a new router to distribute messages out to PrimeNumbersActors
       this.primeNumbersRouter =
@@ -38,9 +50,7 @@ public class PrimeNumbersMaster extends UntypedActor
    {
       if ( message instanceof NumberMessage )
       {
-         final NumberMessage numberMessage = ( NumberMessage ) message;
-
-         this.primeNumbersRouter.tell( numberMessage, getSelf() );
+         this.primeNumbersRouter.tell( message, getSelf() );
       }
       else if ( message instanceof ResultMessage )
       {

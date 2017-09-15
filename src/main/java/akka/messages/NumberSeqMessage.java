@@ -1,5 +1,11 @@
 package akka.messages;
 
+/**
+ * Holds the initial number and the limits of an interval.
+ * 
+ * @author manton
+ *
+ */
 public class NumberSeqMessage
 {
    private final int initialNumber;

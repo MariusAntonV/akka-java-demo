@@ -7,8 +7,14 @@ import akka.messages.NumberMessage;
 import akka.messages.ResultMessage;
 import demo.numbers.PrimeNumbersAdder;
 
+/**
+ * Actor used to calculate sum of prime numbers lower then a limit.
+ * 
+ * @author manton
+ */
 public class PrimeNumbersWorker extends UntypedActor
 {
+   /** The logger */
    final static Logger LOG = Logger.getLogger( PrimeNumbersWorker.class );
 
 
