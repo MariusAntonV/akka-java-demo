@@ -23,9 +23,11 @@ public class PerformanceTest
 
    final static Logger LOG = Logger.getLogger( PerformanceTest.class );
 
-   final static int NO_OF_MESSAGES = 10;
+   final static int NO_OF_MESSAGES = 20;
 
    final static int NO_OF_WORKERS = 10;
+
+   final static int RANDOM_NUMBER_LIMIT = 100000;
 
    private Random rand;
 
@@ -123,7 +125,7 @@ public class PerformanceTest
    {
       for ( int i = 0; i < PerformanceTest.NO_OF_MESSAGES; i++ )
       {
-         final int randomNumber = this.rand.nextInt( 100000 );
+         final int randomNumber = this.rand.nextInt( PerformanceTest.RANDOM_NUMBER_LIMIT );
 
          consumer.accept( randomNumber );
       }
