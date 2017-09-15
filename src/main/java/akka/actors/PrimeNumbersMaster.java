@@ -27,7 +27,7 @@ public class PrimeNumbersMaster extends UntypedActor
       // Create a new router to distribute messages out to PrimeNumbersActors
       this.primeNumbersRouter =
             this.getContext().actorOf(
-                  new Props( PrimeNumbersActor.class ).withRouter( new RoundRobinRouter( numberOfWorkers ) ),
+                  new Props( PrimeNumbersWorker.class ).withRouter( new RoundRobinRouter( numberOfWorkers ) ),
                   "router" );
 
    }

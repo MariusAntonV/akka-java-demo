@@ -13,7 +13,6 @@ import akka.routing.RoundRobinRouter;
 
 public class PrimeNumbersSeqMaster extends UntypedActor
 {
-
    final static Logger LOG = Logger.getLogger( PrimeNumbersSeqMaster.class );
 
    private final ActorRef primeNumbersRouter;

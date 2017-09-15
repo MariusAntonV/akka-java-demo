@@ -1,14 +1,12 @@
 
 package akka.actors;
 
-import java.time.Duration;
-import java.time.LocalDateTime;
-
 import org.apache.log4j.Logger;
 
 import akka.actor.ActorSystem;
 import akka.actor.UntypedActor;
 import akka.message.ResultMessage;
+import demo.numbers.util.StopWatch;
 
 /**
  * @author manton
@@ -24,9 +22,7 @@ public class ResultPrinterActor extends UntypedActor
 
    private int receivedMessages;
 
-   private final LocalDateTime start;
-
-   private LocalDateTime end;
+   private final StopWatch stopWatch = new StopWatch();
 
 
    public ResultPrinterActor( final int expectedMessages, final ActorSystem actorSystem )
@@ -34,7 +30,7 @@ public class ResultPrinterActor extends UntypedActor
       super();
       this.actorSystem = actorSystem;
       this.expectedMessages = expectedMessages;
-      this.start = LocalDateTime.now();
+      this.stopWatch.start();
    }
 
 
@@ -53,12 +49,7 @@ public class ResultPrinterActor extends UntypedActor
 
          if ( this.receivedMessages >= this.expectedMessages )
          {
-            this.end = LocalDateTime.now();
-
-            final Duration dur = Duration.between( this.start, this.end );
-            // Stop our actor hierarchy
-            PrimeNumbersMaster.LOG.info( "It took " + dur.toMillis() + " ms to run this program." );
-            //            getContext().stop( getSelf() );
+            this.stopWatch.stop();
 
             this.actorSystem.shutdown();
          }

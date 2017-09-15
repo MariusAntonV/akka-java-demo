@@ -7,9 +7,9 @@ import akka.message.NumberMessage;
 import akka.message.ResultMessage;
 import demo.numbers.PrimeNumbersAdder;
 
-public class PrimeNumbersActor extends UntypedActor
+public class PrimeNumbersWorker extends UntypedActor
 {
-   final static Logger LOG = Logger.getLogger( PrimeNumbersActor.class );
+   final static Logger LOG = Logger.getLogger( PrimeNumbersWorker.class );
 
 
    @Override

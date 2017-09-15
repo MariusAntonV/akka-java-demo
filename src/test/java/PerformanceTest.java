@@ -89,7 +89,7 @@ public class PerformanceTest
 
 
    @Test
-   public void testWithActorsImproved()
+   public void testWithActorsOptimised()
    {
       // Create our ActorSystem, which owns and configures the classes
       final ActorSystem actorSystem = ActorSystem.create( "actorSystem" );
