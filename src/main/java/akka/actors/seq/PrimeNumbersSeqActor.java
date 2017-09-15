@@ -3,8 +3,8 @@ package akka.actors.seq;
 import org.apache.log4j.Logger;
 
 import akka.actor.UntypedActor;
-import akka.message.NumberSeqMessage;
-import akka.message.PartialResultMessage;
+import akka.messages.NumberSeqMessage;
+import akka.messages.PartialResultMessage;
 import demo.numbers.PrimeNumbersAdder;
 
 public class PrimeNumbersSeqActor extends UntypedActor

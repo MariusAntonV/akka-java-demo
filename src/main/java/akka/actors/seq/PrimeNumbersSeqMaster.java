@@ -5,10 +5,10 @@ import org.apache.log4j.Logger;
 import akka.actor.ActorRef;
 import akka.actor.Props;
 import akka.actor.UntypedActor;
-import akka.message.NumberMessage;
-import akka.message.NumberSeqMessage;
-import akka.message.PartialResultMessage;
-import akka.message.ResultMessage;
+import akka.messages.NumberMessage;
+import akka.messages.NumberSeqMessage;
+import akka.messages.PartialResultMessage;
+import akka.messages.ResultMessage;
 import akka.routing.RoundRobinRouter;
 
 public class PrimeNumbersSeqMaster extends UntypedActor

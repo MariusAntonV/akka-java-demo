@@ -5,7 +5,7 @@ import org.apache.log4j.Logger;
 
 import akka.actor.ActorSystem;
 import akka.actor.UntypedActor;
-import akka.message.ResultMessage;
+import akka.messages.ResultMessage;
 import demo.numbers.util.StopWatch;
 
 /**

@@ -3,8 +3,8 @@ package akka.actors;
 import org.apache.log4j.Logger;
 
 import akka.actor.UntypedActor;
-import akka.message.NumberMessage;
-import akka.message.ResultMessage;
+import akka.messages.NumberMessage;
+import akka.messages.ResultMessage;
 import demo.numbers.PrimeNumbersAdder;
 
 public class PrimeNumbersWorker extends UntypedActor

@@ -5,8 +5,8 @@ import org.apache.log4j.Logger;
 import akka.actor.ActorRef;
 import akka.actor.Props;
 import akka.actor.UntypedActor;
-import akka.message.NumberMessage;
-import akka.message.ResultMessage;
+import akka.messages.NumberMessage;
+import akka.messages.ResultMessage;
 import akka.routing.RoundRobinRouter;
 
 public class PrimeNumbersMaster extends UntypedActor

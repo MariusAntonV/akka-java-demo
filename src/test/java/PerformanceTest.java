@@ -13,7 +13,7 @@ import akka.actor.UntypedActorFactory;
 import akka.actors.PrimeNumbersMaster;
 import akka.actors.ResultPrinterActor;
 import akka.actors.seq.PrimeNumbersSeqMaster;
-import akka.message.NumberMessage;
+import akka.messages.NumberMessage;
 import akka.routing.RoundRobinRouter;
 import demo.numbers.PrimeNumbersAdder;
 import demo.numbers.util.StopWatch;

@@ -1,4 +1,4 @@
-package akka.message;
+package akka.messages;
 
 public class NumberSeqMessage
 {
