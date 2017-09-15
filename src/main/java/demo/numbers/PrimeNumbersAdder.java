@@ -3,7 +3,6 @@ package demo.numbers;
 import org.apache.log4j.Logger;
 
 import demo.numbers.util.ActivityPrinter;
-import demo.numbers.util.PrimeNumberUtils;
 import demo.numbers.util.SysoDotActivityPrinter;
 
 /**
@@ -47,12 +46,25 @@ public class PrimeNumbersAdder
       {
          this.activityPrinter.printActivity( i );
 
-         if ( PrimeNumberUtils.isPrime( i ) )
+         if ( isPrime( i ) )
          {
             primeNumbersSum += i;
          }
       }
 
       return primeNumbersSum;
+   }
+
+
+   private boolean isPrime( final int n )
+   {
+      for ( int i = 2; i < n; i++ )
+      {
+         if ( n % i == 0 )
+         {
+            return false;
+         }
+      }
+      return true;
    }
 }

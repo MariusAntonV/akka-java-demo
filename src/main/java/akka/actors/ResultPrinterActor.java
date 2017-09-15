@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 
 import org.apache.log4j.Logger;
 
+import akka.actor.ActorSystem;
 import akka.actor.UntypedActor;
 import akka.message.ResultMessage;
 
@@ -17,6 +18,8 @@ public class ResultPrinterActor extends UntypedActor
 {
    final static Logger LOG = Logger.getLogger( ResultPrinterActor.class );
 
+   private final ActorSystem actorSystem;
+
    private final int expectedMessages;
 
    private int receivedMessages;
@@ -26,9 +29,10 @@ public class ResultPrinterActor extends UntypedActor
    private LocalDateTime end;
 
 
-   public ResultPrinterActor( final int expectedMessages )
+   public ResultPrinterActor( final int expectedMessages, final ActorSystem actorSystem )
    {
       super();
+      this.actorSystem = actorSystem;
       this.expectedMessages = expectedMessages;
       this.start = LocalDateTime.now();
    }
@@ -54,7 +58,9 @@ public class ResultPrinterActor extends UntypedActor
             final Duration dur = Duration.between( this.start, this.end );
             // Stop our actor hierarchy
             PrimeNumbersMaster.LOG.info( "It took " + dur.toMillis() + " ms to run this program." );
-            getContext().stop( getSelf() );
+            //            getContext().stop( getSelf() );
+
+            this.actorSystem.shutdown();
          }
       }
       else
