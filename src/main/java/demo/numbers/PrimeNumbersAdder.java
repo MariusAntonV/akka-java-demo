@@ -1,5 +1,7 @@
 package demo.numbers;
 
+import java.util.stream.IntStream;
+
 import org.apache.log4j.Logger;
 
 import demo.numbers.util.ActivityPrinter;
@@ -54,36 +56,21 @@ public class PrimeNumbersAdder
     */
    public int calculate()
    {
-      int primeNumbersSum = 0;
-
-      for ( int i = this.first; i <= this.last; i++ )
+      return IntStream.rangeClosed( this.first, this.last ).filter( i ->
       {
          this.activityPrinter.printActivity( i );
-
-         if ( isPrime( i ) )
-         {
-            primeNumbersSum += i;
-         }
-      }
-
-      return primeNumbersSum;
+         return isPrime( i );
+      } ).sum();
    }
 
 
    /**
     * Checks if given number is prime.
-    * @param n number to check if it is prime 
+    * @param n number to check if it is prime
     * @return true if given parameter is a prime number
     */
    private boolean isPrime( final int n )
    {
-      for ( int i = 2; i < n; i++ )
-      {
-         if ( n % i == 0 )
-         {
-            return false;
-         }
-      }
-      return true;
+      return IntStream.rangeClosed( 2, n / 2 ).noneMatch( i -> n % i == 0 );
    }
 }
